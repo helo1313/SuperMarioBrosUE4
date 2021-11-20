@@ -23,7 +23,7 @@ ASuperMarioBrosCharacter::ASuperMarioBrosCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(50.0f);
 	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
 
 	// Create a camera boom attached to the root (capsule)
@@ -100,7 +100,7 @@ void ASuperMarioBrosCharacter::Tick(float DeltaSeconds)
 void ASuperMarioBrosCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Note: the 'Jump' action and the 'MoveRight' axis are bound to actual keys/buttons/sticks in DefaultInput.ini (editable from Project Settings..Input)
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ASuperMarioBrosCharacter::MarioJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASuperMarioBrosCharacter::MoveRight);
 
@@ -119,7 +119,7 @@ void ASuperMarioBrosCharacter::MoveRight(float Value)
 void ASuperMarioBrosCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// Jump on any touch
-	Jump();
+	MarioJump();
 }
 
 void ASuperMarioBrosCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -149,3 +149,31 @@ void ASuperMarioBrosCharacter::UpdateCharacter()
 		}
 	}
 }
+
+/** Other functions */
+
+void ASuperMarioBrosCharacter::Jump()
+{
+	FVector LaunchVelocity = FVector(0.f,0.f,1000.f);
+	LaunchCharacter(LaunchVelocity, false , true);
+}
+
+void ASuperMarioBrosCharacter::Landed(const FHitResult& Hit)
+{
+	JumpsAmount = 0;
+}
+
+void ASuperMarioBrosCharacter::MarioJump()
+{
+	if (JumpsAmount < 2)
+	{
+		Jump();
+		JumpsAmount++;
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "nie przesz");
+	}
+}
+
+
