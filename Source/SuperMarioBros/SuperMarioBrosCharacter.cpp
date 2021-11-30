@@ -68,6 +68,8 @@ ASuperMarioBrosCharacter::ASuperMarioBrosCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+	AllowAnimationUpdate = true;
+	bIsAlive = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,14 +77,31 @@ ASuperMarioBrosCharacter::ASuperMarioBrosCharacter()
 
 void ASuperMarioBrosCharacter::UpdateAnimation()
 {
-	const FVector PlayerVelocity = GetVelocity();
-	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
-
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
-	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
+	if(AllowAnimationUpdate)
 	{
-		GetSprite()->SetFlipbook(DesiredAnimation);
+		const FVector PlayerVelocity = GetVelocity();
+		const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
+
+		UPaperFlipbook* DesiredAnimation = nullptr;
+	
+		if(bIsJumping) //AnimJump 
+			{
+			DesiredAnimation = JumpAnimation;
+			}
+		else if (PlayerSpeedSqr > 0)  //Anim Run
+			{
+			DesiredAnimation = RunningAnimation;
+			}
+		else	//Anim Idle
+			{
+			DesiredAnimation = IdleAnimation;
+			}
+
+		//Update animation
+		if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
+		{
+			GetSprite()->SetFlipbook(DesiredAnimation);
+		}
 	}
 }
 
@@ -161,6 +180,7 @@ void ASuperMarioBrosCharacter::Jump()
 void ASuperMarioBrosCharacter::Landed(const FHitResult& Hit)
 {
 	JumpsAmount = 0;
+	bIsJumping = false;
 }
 
 void ASuperMarioBrosCharacter::MarioJump()
@@ -169,11 +189,26 @@ void ASuperMarioBrosCharacter::MarioJump()
 	{
 		Jump();
 		JumpsAmount++;
+		bIsJumping = true;
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "nie przesz");
+		Death();
 	}
 }
+
+void ASuperMarioBrosCharacter::Death()
+{
+	AllowAnimationUpdate = false;
+	bIsAlive = false;
+	GetSprite()-> SetFlipbook(DeathAnimation);
+	
+	//Launching Player On Death
+	FVector LaunchVelocity = FVector(0.f,0.f,500.f);
+	LaunchCharacter(LaunchVelocity, true , true);
+	
+	DisableInput(GetWorld()->GetFirstPlayerController());
+}
+
 
 
