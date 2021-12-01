@@ -63,6 +63,8 @@ protected:
 	void MarioJump();
 
 	void Death();
+	
+	void UpdateTime(float DeltaTime);
 
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
@@ -82,8 +84,11 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AnimationHandle);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AnimationHandle)
 	bool AllowAnimationUpdate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameHandle)
+	float Time;
 
 private:
 	UPROPERTY()

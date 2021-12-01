@@ -68,8 +68,11 @@ ASuperMarioBrosCharacter::ASuperMarioBrosCharacter()
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
 	bReplicates = true;
+	
+	//set up variables
 	AllowAnimationUpdate = true;
 	bIsAlive = true;
+	Time = 399;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -109,7 +112,9 @@ void ASuperMarioBrosCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	UpdateCharacter();	
+	UpdateCharacter();
+
+	UpdateTime(DeltaSeconds);
 }
 
 
@@ -197,6 +202,7 @@ void ASuperMarioBrosCharacter::MarioJump()
 	}
 }
 
+//Handle Mario Death
 void ASuperMarioBrosCharacter::Death()
 {
 	AllowAnimationUpdate = false;
@@ -209,6 +215,13 @@ void ASuperMarioBrosCharacter::Death()
 	
 	DisableInput(GetWorld()->GetFirstPlayerController());
 }
+
+//Update time left
+void ASuperMarioBrosCharacter::UpdateTime(float DeltaTime) 
+{
+	Time = Time - DeltaTime;
+}
+
 
 
 
