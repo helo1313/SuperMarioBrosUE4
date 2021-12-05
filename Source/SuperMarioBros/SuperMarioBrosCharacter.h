@@ -66,6 +66,8 @@ protected:
 	
 	void UpdateTime(float DeltaTime);
 
+	void AddCoin();
+
 	/** Handle touch inputs. */
 	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
 
@@ -90,6 +92,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameHandle)
 	float Time;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameHandle)
+	int Coins;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameHandle)
+	int Score;
+	
 private:
 	UPROPERTY()
 	int JumpsAmount;

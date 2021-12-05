@@ -2,7 +2,7 @@
 
 
 #include "Coin.h"
-
+#include "SuperMarioBrosCharacter.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -21,7 +21,7 @@ ACoin::ACoin()
 	CoinBoxCollision = CreateDefaultSubobject<UBoxComponent>("Collision Box");
 	CoinBoxCollision->SetRelativeScale3D(FVector(1.0f,1.0f,1.0f));
 	CoinBoxCollision->AttachToComponent(CoinRootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	CoinFlipBook->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnCoinPickedUp);
+	CoinBoxCollision->OnComponentBeginOverlap.AddDynamic(this, &ACoin::OnCoinPickedUp);
 
 	
 	
@@ -44,6 +44,10 @@ void ACoin::Tick(float DeltaTime)
 void ACoin::OnCoinPickedUp(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Overlap!"));   
+	if(Cast<ASuperMarioBrosCharacter>(OtherActor))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Overlap!"));
+	};
+	
 }
 

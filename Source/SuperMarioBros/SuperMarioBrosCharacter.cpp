@@ -222,6 +222,11 @@ void ASuperMarioBrosCharacter::UpdateTime(float DeltaTime)
 	Time = Time - DeltaTime;
 }
 
+void ASuperMarioBrosCharacter::AddCoin()
+{
+	Coins++;
+}
+
 
 
 

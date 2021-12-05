@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperFlipbookComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "Coin.generated.h"
 
@@ -22,7 +23,7 @@ public:
 	UPaperFlipbookComponent* CoinFlipBook;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UShapeComponent* CoinBoxCollision;
+	UBoxComponent* CoinBoxCollision;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USceneComponent* CoinRootComponent;
